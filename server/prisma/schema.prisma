@@ -1,0 +1,42 @@
+datasource db {
+  provider = "sqlite"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Tracks an entire top-level business workflow session
+model WorkflowSession {
+  id            String         @id @default(uuid())
+  title         String
+  status        String         // "PROCESSING", "AWAITING_HUMAN", "COMPLETED", "TERMINATED"
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  logs          AgentLog[]
+  checkpoints   HumanCheckpoint[]
+}
+
+// Tracks individual agent execution blocks and payload transfers
+model AgentLog {
+  id            String          @id @default(uuid())
+  sessionId     String
+  session       WorkflowSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  agentName     String          // "Scoping Agent", "Risk Agent", "Ledger Agent"
+  status        String          // "INFO", "SUCCESS", "WARNING", "ERROR"
+  payload       String          // Captured structured JSON Stringified data table
+  message       String
+  createdAt     DateTime        @default(now())
+}
+
+// Tracks the audit log of human approval inputs
+model HumanCheckpoint {
+  id            String          @id @default(uuid())
+  sessionId     String
+  session       WorkflowSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  conflictType  String
+  decision      String          // "APPROVED", "REJECTED"
+  modifications String?         // Stores adjusted parameters like budget/timeline shifts
+  feedback      String?         // Rejection reason text if terminated
+  createdAt     DateTime        @default(now())
+}

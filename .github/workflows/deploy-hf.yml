@@ -15,7 +15,7 @@ jobs:
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
           # IMPORTANT: EDIT THESE TO MATCH YOUR HUGGING FACE ACCOUNT:
-          HF_USERNAME: "Faheem-ud-darain"      # Your Hugging Face Username
+          HF_USERNAME: "aka-faheem"      # Your Hugging Face Username
           HF_SPACE_NAME: "aether-flow-backend" # Your Hugging Face Space Name
         run: |
           git config --global user.email "actions@github.com"

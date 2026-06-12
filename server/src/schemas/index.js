@@ -1,8 +1,8 @@
-const projectScopingSchema = require('./projectScoping');
-const riskAssessmentSchema = require('./riskAssessment');
-const financialLedgerSchema = require('./financialLedger');
+import projectScopingSchema from './projectScoping.js';
+import riskAssessmentSchema from './riskAssessment.js';
+import financialLedgerSchema from './financialLedger.js';
 
-module.exports = {
+export {
   projectScopingSchema,
   riskAssessmentSchema,
   financialLedgerSchema

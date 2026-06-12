@@ -60,4 +60,4 @@ const financialLedgerSchema = {
   additionalProperties: false
 };
 
-module.exports = financialLedgerSchema;
+export default financialLedgerSchema;

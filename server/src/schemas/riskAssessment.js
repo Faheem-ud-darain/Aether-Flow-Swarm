@@ -7,6 +7,12 @@ const riskAssessmentSchema = {
   type: "object",
   description: "Payload assessing project risks and compliance state.",
   properties: {
+    risk_score: {
+      type: "integer",
+      minimum: 0,
+      maximum: 100,
+      description: "Dynamic risk score assessing compliance and severity (0-100)."
+    },
     flagged_risks: {
       type: "array",
       description: "List of identified and assessed risks.",
@@ -60,8 +66,8 @@ const riskAssessmentSchema = {
       additionalProperties: false
     }
   },
-  required: ["flagged_risks", "compliance_status"],
+  required: ["risk_score", "flagged_risks", "compliance_status"],
   additionalProperties: false
 };
 
-module.exports = riskAssessmentSchema;
+export default riskAssessmentSchema;

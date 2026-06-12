@@ -1,5 +1,6 @@
 datasource db {
   provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -39,4 +40,10 @@ model HumanCheckpoint {
   modifications String?         // Stores adjusted parameters like budget/timeline shifts
   feedback      String?         // Rejection reason text if terminated
   createdAt     DateTime        @default(now())
+}
+
+// Global configurable settings
+model SystemSetting {
+  key   String @id
+  value String
 }

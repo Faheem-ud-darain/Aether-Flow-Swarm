@@ -6,10 +6,10 @@ yarn-error.log*
 
 # Environment files
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env*
+**/.env*
+server/.env
+client/.env
 
 # Next.js build outputs
 .next/
@@ -28,3 +28,10 @@ logs
 # OS files
 .DS_Store
 Thumbs.db
+
+# Scratch and Backups
+.agent/
+ui-ux-skill-temp/
+*.bak
+server/scratch-test-band.js
+server/prisma.config.js.bak

@@ -71,10 +71,14 @@ const projectScopingSchema = {
         required: ["name"],
         additionalProperties: false
       }
+    },
+    project_name: {
+      type: "string",
+      description: "An analyzed, unique, and professional title/name for this project based on the requirements (e.g. 'GDPR Core Migration Portal')."
     }
   },
-  required: ["budget", "timeline", "features"],
+  required: ["budget", "timeline", "features", "project_name"],
   additionalProperties: false
 };
 
-module.exports = projectScopingSchema;
+export default projectScopingSchema;

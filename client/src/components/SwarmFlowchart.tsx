@@ -19,35 +19,35 @@ interface SwarmFlowchartProps {
 
 export default function SwarmFlowchart({ activeNodeId, nodesStatus }: SwarmFlowchartProps) {
   const nodes: Node[] = [
-    { id: 'scoping', name: 'Scoping Agent', role: 'Feature & Timeline Scope', icon: FileText, x: 80, y: 150 },
-    { id: 'risk', name: 'Risk Agent', role: 'Compliance & Safety Check', icon: Shield, x: 260, y: 150 },
-    { id: 'hitl', name: 'Human-in-the-Loop', role: 'Manual Transaction Override', icon: UserCheck, x: 440, y: 50 },
-    { id: 'ledger', name: 'Ledger Agent', role: 'Milestones & Budget Approval', icon: Landmark, x: 440, y: 250 },
+    { id: 'scoping', name: 'Scoping Agent', role: 'Feature & Timeline Scope', icon: FileText, x: 80, y: 240 },
+    { id: 'risk', name: 'Risk Agent', role: 'Compliance & Safety Check', icon: Shield, x: 260, y: 240 },
+    { id: 'hitl', name: 'Human-in-the-Loop', role: 'Manual Transaction Override', icon: UserCheck, x: 440, y: 110 },
+    { id: 'ledger', name: 'Ledger Agent', role: 'Milestones & Budget Approval', icon: Landmark, x: 440, y: 370 },
   ];
 
   const getStatusColor = (status: string, isActive: boolean) => {
-    if (isActive) return 'border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)] bg-slate-900/90 text-cyan-400';
+    if (isActive) return 'border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.2)] bg-white text-cyan-600';
     switch (status) {
-      case 'completed': return 'border-emerald-500/50 bg-emerald-950/20 text-emerald-400';
-      case 'paused': return 'border-amber-500/50 bg-amber-950/20 text-amber-400 animate-pulse';
-      case 'processing': return 'border-cyan-500/50 bg-cyan-950/20 text-cyan-400 animate-pulse';
-      default: return 'border-slate-800 bg-slate-950/40 text-slate-400';
+      case 'completed': return 'border-emerald-200 bg-emerald-50 text-emerald-600';
+      case 'paused': return 'border-amber-200 bg-amber-50 text-amber-600 animate-pulse';
+      case 'processing': return 'border-cyan-200 bg-cyan-50 text-cyan-600 animate-pulse';
+      default: return 'border-slate-200 bg-white text-slate-400';
     }
   };
 
   return (
-    <div className="w-full bg-slate-950/50 border border-slate-800/80 backdrop-blur-xl rounded-2xl p-6 relative overflow-hidden">
+    <div className="w-full bg-white border border-slate-200 shadow-sm rounded-2xl p-6 relative overflow-hidden flex-1 flex flex-col">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="text-lg font-semibold text-slate-100 flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-cyan-400 animate-ping"></span>
+          <h2 className="text-lg font-bold text-slate-900 flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-cyan-500 animate-ping"></span>
             Active Swarm Flowchart
           </h2>
-          <p className="text-xs text-slate-400">Visual agent pipeline execution & communication graph</p>
+          <p className="text-xs text-slate-500">Visual agent pipeline execution & communication graph</p>
         </div>
       </div>
 
-      <div className="relative w-full h-[320px] overflow-auto border border-slate-900 bg-slate-950/80 rounded-xl p-4 flex items-center justify-center">
+      <div className="relative w-full h-[510px] overflow-auto border border-slate-100 bg-slate-50/50 rounded-xl p-4 flex items-center justify-center">
         {/* SVG connection lines */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ minWidth: '600px' }}>
           <defs>
@@ -71,60 +71,60 @@ export default function SwarmFlowchart({ activeNodeId, nodesStatus }: SwarmFlowc
 
           {/* Path: Scoping to Risk */}
           <path
-            d="M 180 150 L 260 150"
-            stroke={activeNodeId === 'scoping' ? 'url(#gradient-scoping-risk)' : '#1e293b'}
+            d="M 180 240 L 260 240"
+            stroke={nodesStatus.scoping === 'completed' || nodesStatus.scoping === 'processing' ? 'url(#gradient-scoping-risk)' : '#E2E8F0'}
             strokeWidth="3"
             fill="none"
             className={activeNodeId === 'scoping' ? 'stroke-dasharray-glow' : ''}
           />
           {activeNodeId === 'scoping' && (
             <circle r="4" fill="#22d3ee">
-              <animateMotion dur="2s" repeatCount="indefinite" path="M 180 150 L 260 150" />
+              <animateMotion dur="2s" repeatCount="indefinite" path="M 180 240 L 260 240" />
             </circle>
           )}
 
           {/* Path: Risk to HITL (Top Branch) */}
           <path
-            d="M 360 150 C 400 150, 390 50, 440 50"
-            stroke={activeNodeId === 'risk' && nodesStatus['risk'] === 'paused' ? 'url(#gradient-risk-hitl)' : '#1e293b'}
+            d="M 360 240 C 400 240, 390 110, 440 110"
+            stroke={nodesStatus.risk === 'paused' || nodesStatus.hitl !== 'idle' ? 'url(#gradient-risk-hitl)' : '#E2E8F0'}
             strokeWidth="3"
             fill="none"
           />
           {activeNodeId === 'risk' && nodesStatus['risk'] === 'paused' && (
             <circle r="4" fill="#f59e0b">
-              <animateMotion dur="2.5s" repeatCount="indefinite" path="M 360 150 C 400 150, 390 50, 440 50" />
+              <animateMotion dur="2.5s" repeatCount="indefinite" path="M 360 240 C 400 240, 390 110, 440 110" />
             </circle>
           )}
 
           {/* Path: Risk to Ledger (Bottom Branch) */}
           <path
-            d="M 360 150 C 400 150, 390 250, 440 250"
-            stroke={activeNodeId === 'risk' && nodesStatus['risk'] === 'completed' ? 'url(#gradient-risk-ledger)' : '#1e293b'}
+            d="M 360 240 C 400 240, 390 370, 440 370"
+            stroke={nodesStatus.ledger !== 'idle' || (nodesStatus.risk === 'completed' && nodesStatus.hitl === 'idle') ? 'url(#gradient-risk-ledger)' : '#E2E8F0'}
             strokeWidth="3"
             fill="none"
           />
           {activeNodeId === 'risk' && nodesStatus['risk'] === 'completed' && (
             <circle r="4" fill="#10b981">
-              <animateMotion dur="2.5s" repeatCount="indefinite" path="M 360 150 C 400 150, 390 250, 440 250" />
+              <animateMotion dur="2.5s" repeatCount="indefinite" path="M 360 240 C 400 240, 390 370, 440 370" />
             </circle>
           )}
 
           {/* Path: HITL to Ledger */}
           <path
-            d="M 490 100 L 490 200"
-            stroke={activeNodeId === 'hitl' && nodesStatus['hitl'] === 'completed' ? 'url(#gradient-hitl-ledger)' : '#1e293b'}
+            d="M 528 175 L 528 305"
+            stroke={nodesStatus.hitl === 'completed' || nodesStatus.ledger !== 'idle' ? 'url(#gradient-hitl-ledger)' : '#E2E8F0'}
             strokeWidth="3"
             fill="none"
           />
           {activeNodeId === 'hitl' && nodesStatus['hitl'] === 'completed' && (
             <circle r="4" fill="#10b981">
-              <animateMotion dur="1.5s" repeatCount="indefinite" path="M 490 100 L 490 200" />
+              <animateMotion dur="1.5s" repeatCount="indefinite" path="M 528 175 L 528 305" />
             </circle>
           )}
         </svg>
 
         {/* Nodes Wrapper */}
-        <div className="absolute w-[600px] h-[300px]">
+        <div className="absolute w-[600px] h-[480px]">
           {nodes.map((node) => {
             const IconComponent = node.icon;
             const status = nodesStatus[node.id] || 'idle';
@@ -137,19 +137,19 @@ export default function SwarmFlowchart({ activeNodeId, nodesStatus }: SwarmFlowc
                 style={{ left: `${node.x}px`, top: `${node.y}px` }}
                 className={`absolute transform -translate-y-1/2 w-44 p-3 rounded-xl border backdrop-blur-md transition-all duration-300 ${statusClass} flex flex-col items-center text-center`}
               >
-                <div className="p-2 rounded-lg bg-slate-950/80 mb-2 text-current border border-slate-800">
+                <div className="p-2 rounded-lg bg-slate-50 mb-2 text-current border border-slate-200">
                   <IconComponent className="w-5 h-5" />
                 </div>
-                <div className="font-semibold text-xs text-slate-100">{node.name}</div>
-                <div className="text-[10px] text-slate-400 mt-0.5 leading-tight">{node.role}</div>
+                <div className="font-bold text-xs text-slate-800">{node.name}</div>
+                <div className="text-[10px] text-slate-500 mt-0.5 leading-tight">{node.role}</div>
                 <div className="mt-2 flex items-center gap-1.5">
                   <span className={`h-1.5 w-1.5 rounded-full ${
                     status === 'completed' ? 'bg-emerald-500' :
                     status === 'paused' ? 'bg-amber-500 animate-pulse' :
-                    status === 'processing' ? 'bg-cyan-400 animate-pulse' :
-                    'bg-slate-700'
+                    status === 'processing' ? 'bg-cyan-500 animate-pulse' :
+                    'bg-slate-300'
                   }`}></span>
-                  <span className="text-[9px] uppercase tracking-wider font-semibold opacity-80">{status}</span>
+                  <span className="text-[9px] uppercase tracking-wider font-semibold opacity-90">{status}</span>
                 </div>
               </div>
             );

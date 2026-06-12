@@ -1,10 +1,18 @@
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const envResult = dotenv.config({ path: path.resolve(__dirname, '../.env') });
+console.log('Dotenv Load Result:', envResult);
+console.log('DATABASE_URL is:', process.env.DATABASE_URL);
+
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import workflowRouter from './routes/workflow.js';
 import { featherlessClient, aimlClient } from './utils/aiClient.js';
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;

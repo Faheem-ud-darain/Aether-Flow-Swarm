@@ -333,8 +333,8 @@ export default function Home() {
       return;
     }
 
-    if (rawInput.length > 4000) {
-      setValidationError('Input exceeds safe maximum context ceiling (4,000 characters). Please condense your text.');
+    if (rawInput.length > 2000000) {
+      setValidationError('Input exceeds safe maximum context ceiling (2,000,000 characters). Please condense your text.');
       return;
     }
 
@@ -728,7 +728,7 @@ export default function Home() {
             
             <div className="flex justify-between items-center border-t border-slate-100 pt-4">
               <span className="text-[11px] text-slate-400 font-mono">
-                {rawInput.length} / 4000 characters
+                {rawInput.length.toLocaleString()} / 2,000,000 characters
               </span>
               <div className="flex items-center gap-3">
                 <button

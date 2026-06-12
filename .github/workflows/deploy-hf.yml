@@ -1,0 +1,41 @@
+name: Sync Backend to Hugging Face Space
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Push to Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          # IMPORTANT: EDIT THESE TO MATCH YOUR HUGGING FACE ACCOUNT:
+          HF_USERNAME: "Faheem-ud-darain"      # Your Hugging Face Username
+          HF_SPACE_NAME: "aether-flow-backend" # Your Hugging Face Space Name
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          
+          # Clone the HF space repository
+          git clone https://$HF_USERNAME:$HF_TOKEN@huggingface.co/spaces/$HF_USERNAME/$HF_SPACE_NAME hf_space
+          
+          # Clean the existing files in the HF space repository
+          find hf_space -maxdepth 1 ! -name 'hf_space' ! -name '.git' -exec rm -rf {} +
+          
+          # Copy everything from the server directory into the HF Space root directory
+          cp -r server/* hf_space/
+          
+          # Commit and force push to Hugging Face
+          cd hf_space
+          git add -A
+          if git diff-index --quiet HEAD --; then
+            echo "No changes to commit"
+          else
+            git commit -m "Deploy from GitHub Actions: ${GITHUB_SHA}"
+            git push origin main --force
+          fi

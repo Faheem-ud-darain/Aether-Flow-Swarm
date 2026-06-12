@@ -19,6 +19,8 @@ import {
   ListTodo
 } from 'lucide-react';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
 interface Log {
   id: string;
   agentName: string;
@@ -57,7 +59,7 @@ export default function HistoryPage() {
   const fetchSessions = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:5000/api/workflow');
+      const res = await fetch(`${API_BASE}/api/workflow`);
       if (!res.ok) throw new Error('Failed to fetch historical runs');
       const data = await res.json();
       setSessions(data);
@@ -120,7 +122,7 @@ export default function HistoryPage() {
     if (!selectedSession) return;
     try {
       setIsSubmitting(true);
-      const res = await fetch(`http://localhost:5000/api/workflow/session/${selectedSession.id}/approve`, {
+      const res = await fetch(`${API_BASE}/api/workflow/session/${selectedSession.id}/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

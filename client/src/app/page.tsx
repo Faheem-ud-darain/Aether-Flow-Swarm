@@ -21,6 +21,8 @@ import AgentLogs, { LogMessage } from '@/components/AgentLogs';
 import AgentTerminal from '@/components/AgentTerminal';
 import HumanApprovalModal from '@/components/HumanApprovalModal';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
 // Explicit Types for state management
 interface ApprovalPayload {
   agentSource: string;
@@ -53,7 +55,7 @@ export default function Home() {
 
   const fetchCompletedSessions = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/workflow');
+      const res = await fetch(`${API_BASE}/api/workflow`);
       if (res.ok) {
         const data = await res.json();
         const completed = data.filter((s: any) => s.status === 'COMPLETED');
@@ -232,7 +234,7 @@ export default function Home() {
 
   // Fetch settings on mount
   useEffect(() => {
-    fetch('http://localhost:5000/api/workflow/settings')
+    fetch(`${API_BASE}/api/workflow/settings`)
       .then(res => {
         if (res.ok) return res.json();
         throw new Error('Failed to load settings');
@@ -255,7 +257,7 @@ export default function Home() {
   const handleBudgetLimitChange = async (newLimit: number) => {
     setBudgetLimit(newLimit);
     try {
-      await fetch('http://localhost:5000/api/workflow/settings', {
+      await fetch(`${API_BASE}/api/workflow/settings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ budgetLimit: newLimit })
@@ -268,7 +270,7 @@ export default function Home() {
   const handleCompliancePolicyChange = async (newPolicy: string) => {
     setCompliancePolicy(newPolicy);
     try {
-      await fetch('http://localhost:5000/api/workflow/settings', {
+      await fetch(`${API_BASE}/api/workflow/settings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ compliancePolicy: newPolicy })
@@ -285,7 +287,7 @@ export default function Home() {
     let isSubscribed = true;
     const pollInterval = setInterval(async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/workflow/session/${activeSessionId}`);
+        const res = await fetch(`${API_BASE}/api/workflow/session/${activeSessionId}`);
         if (!res.ok) throw new Error('Poll failed');
         const sessionData = await res.json();
 
@@ -360,7 +362,7 @@ export default function Home() {
             : (rawInput.trim().split(/\s+/).slice(0, 5).join(' ') || 'Enterprise Allocation') + ' Swarm'
           );
 
-      const res = await fetch('http://localhost:5000/api/workflow/session/start', {
+      const res = await fetch(`${API_BASE}/api/workflow/session/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -409,7 +411,7 @@ export default function Home() {
     }
 
     try {
-      const res = await fetch(`http://localhost:5000/api/workflow/session/${activeSessionId}/approve`, {
+      const res = await fetch(`${API_BASE}/api/workflow/session/${activeSessionId}/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -456,7 +458,7 @@ export default function Home() {
     }
 
     try {
-      const res = await fetch(`http://localhost:5000/api/workflow/session/${activeSessionId}/approve`, {
+      const res = await fetch(`${API_BASE}/api/workflow/session/${activeSessionId}/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -520,7 +522,7 @@ export default function Home() {
           const formData = new FormData();
           formData.append('file', file);
           
-          const res = await fetch('http://localhost:5000/api/workflow/upload', {
+          const res = await fetch(`${API_BASE}/api/workflow/upload`, {
             method: 'POST',
             body: formData
           });

@@ -7,7 +7,7 @@ import { runScopingAgent, runRiskAgent, runLedgerAgent } from '../utils/swarmOrc
 import { sanitizeTextInput } from '../utils/security.js';
 
 const require = createRequire(import.meta.url);
-const pdfParse = require('pdf-parse');
+const { PDFParse } = require('pdf-parse');
 
 const prisma = new PrismaClient();
 const router = Router();
@@ -24,7 +24,8 @@ router.post('/upload', upload.single('file'), async (req, res) => {
     let extractedText = '';
 
     if (originalname.endsWith('.pdf')) {
-      const data = await pdfParse(buffer);
+      const parser = new PDFParse({ data: buffer });
+      const data = await parser.getText();
       extractedText = data.text;
     } else if (originalname.endsWith('.docx')) {
       const result = await mammoth.extractRawText({ buffer });

@@ -8,7 +8,7 @@ export function sanitizeTextInput(text) {
   }
   
   // 1. Buffer overload safeguard (Limit size to avoid memory exhaustion)
-  const MAX_CHAR_LIMIT = 100000;
+  const MAX_CHAR_LIMIT = 2000000;
   if (text.length > MAX_CHAR_LIMIT) {
     return { isValid: false, reason: `Excessive buffer size: ${text.length} characters (Limit: ${MAX_CHAR_LIMIT}).` };
   }
@@ -19,8 +19,8 @@ export function sanitizeTextInput(text) {
     return { isValid: false, reason: 'Malicious HTML or Script Injection vector detected.' };
   }
 
-  // 3. Common SQL Injection patterns
-  const sqlInjectionRegex = /\b(union\s+select|select\s+.*?\s+from|drop\s+table|delete\s+from|update\s+.*?\s+set|insert\s+into)\b|(['"\u2019])\s*OR\s+([\w\s'"\u2019]+)?\d+\s*=\s*\d+|or\s+\d+\s*=\s*\d+/i;
+  // 3. Common SQL Injection patterns (avoiding broad 'select...from' false positives in natural language)
+  const sqlInjectionRegex = /\b(union\s+(all\s+)?select|drop\s+table|delete\s+from|insert\s+into)\b|or\s+['"\u2019]?\d+['"\u2019]?\s*=\s*['"\u2019]?\d+/i;
   if (sqlInjectionRegex.test(text)) {
     return { isValid: false, reason: 'Suspicious database query or SQL injection structure detected.' };
   }

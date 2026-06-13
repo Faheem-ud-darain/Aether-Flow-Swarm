@@ -2,7 +2,7 @@
 title: Aether Flow Swarm Backend
 emoji: 🤖
 colorFrom: blue
-colorTo: cyan
+colorTo: indigo
 sdk: docker
 app_port: 5000
 pinned: false

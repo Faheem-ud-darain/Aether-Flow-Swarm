@@ -33,10 +33,11 @@ jobs:
           
           # Commit and force push to Hugging Face
           cd hf_space
+          git checkout -b main || git checkout main || true
           git add -A
-          if git diff-index --quiet HEAD --; then
+          if [ -z "$(git status --porcelain)" ]; then
             echo "No changes to commit"
           else
             git commit -m "Deploy from GitHub Actions: ${GITHUB_SHA}"
-            git push origin main --force
           fi
+          git push origin main --force
